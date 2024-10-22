@@ -70,10 +70,7 @@ class ToolbarItemHook implements ToolbarItemInterface
             ->getQueryBuilderForTable('fe_users');
         $this->users = $queryBuilder->select('*')
             ->from('fe_users')
-            ->where($queryBuilder->expr()->eq('email', $queryBuilder->createNamedParameter($email, PDO::PARAM_STR)))
-            ->setMaxResults(15)
-            ->execute()
-            ->fetchAll();
+            ->where($queryBuilder->expr()->eq('email', $queryBuilder->createNamedParameter($email, PDO::PARAM_STR)))->setMaxResults(15)->executeQuery()->fetchAllAssociative();
 
         if (count($this->users)) {
             if (count($this->users) == 1) {
@@ -137,11 +134,7 @@ class ToolbarItemHook implements ToolbarItemInterface
                     'fe_groups',
                     'fg',
                     'fg.uid in (fu.usergroup)'
-                )
-                ->where(
-                    'fg.felogin_redirectPid != \'\'',
-                    'fu.uid = ' . $user['uid']
-                )->execute()
+                )->where('fg.felogin_redirectPid != \'\'', 'fu.uid = ' . $user['uid'])->executeQuery()
                 ->fetchAssociative();
 
             $parameterArray['redirecturl'] = $this->getRedirectUrl($userGroup['felogin_redirectPid'] ?? $user['pid']);
@@ -173,7 +166,7 @@ class ToolbarItemHook implements ToolbarItemInterface
         if (trim($title) === '') {
             $title = $GLOBALS['LANG']->getLL('cabag_loginas.switchToFeuser', true);
         }
-        if (version_compare(TYPO3_version, '7.6.0', '>=')) {
+        if (version_compare(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion(), '7.6.0', '>=')) {
             $iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
             $switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render();
             $additionalClass = '  class="btn btn-default"';
@@ -215,10 +208,7 @@ class ToolbarItemHook implements ToolbarItemInterface
                 ->from('sys_domain')
                 ->where(
                     $queryBuilder->expr()->eq('domainName', $queryBuilder->createNamedParameter($domainArray['host'], PDO::PARAM_STR))
-                )
-                ->setMaxResults(1)
-                ->execute()
-                ->fetch();
+                )->setMaxResults(1)->executeQuery()->fetchAssociative();
         } else {
             $rowArray = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                 'domainName, tx_cabagfileexplorer_redirect_to', 'sys_domain', 'hidden = 0 AND domainName = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($domainArray['host'], 'sys_domain'), '', '', 1

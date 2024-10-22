@@ -29,7 +29,7 @@ class LoginAsService extends AbstractAuthenticationService
     public function getUser()
     {
         $row = false;
-        $cabagLoginasData = GeneralUtility::_GP('tx_cabagloginas');
+        $cabagLoginasData = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['tx_cabagloginas'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['tx_cabagloginas'] ?? null;
 
         if (isset($cabagLoginasData['verification'])) {
             $ses_id = $_COOKIE['be_typo_user'];
@@ -46,12 +46,7 @@ class LoginAsService extends AbstractAuthenticationService
                         ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
                     $user = $queryBuilder
                         ->select('*')
-                        ->from('fe_users')
-                        ->where(
-                            $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($cabagLoginasData['userid'], \PDO::PARAM_INT))
-                        )
-                        ->execute()
-                        ->fetchAll();
+                        ->from('fe_users')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($cabagLoginasData['userid'], \PDO::PARAM_INT)))->executeQuery()->fetchAllAssociative();
                 if ($user[0]) {
                     $row = $user[0];
                     $this->rowdata = $user[0];

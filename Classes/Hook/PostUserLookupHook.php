@@ -37,11 +37,11 @@ class PostUserLookupHook {
      *
      * @return void
      */
-    public function postUserLookUp(array $params, object &$pObj) {
+    public function postUserLookUp(array $params, object &$pObj): void {
 
-        if (TYPO3_MODE == 'FE') {
+        if (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend()) {
             if (!empty($GLOBALS['TSFE']->fe_user->user['uid'])) {
-                $cabagLoginasData = GeneralUtility::_GP('Cabag\CabagLoginas\Hook\ToolbarItemHook');
+                $cabagLoginasData = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['Cabag\CabagLoginas\Hook\ToolbarItemHook'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['Cabag\CabagLoginas\Hook\ToolbarItemHook'] ?? null;
                 if (!empty($cabagLoginasData['redirecturl'])) {
                     $partsArray = parse_url(rawurldecode($cabagLoginasData['redirecturl']));
                     if (strpos(GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $partsArray['scheme'] . '://' . $partsArray['host'] . '/') === FALSE) {
@@ -57,7 +57,9 @@ class PostUserLookupHook {
                         (isset($partsArray['path']) ? $partsArray['path'] : '') .
                         (isset($partsArray['query']) ? '?' . $partsArray['query'] : '') .
                         (isset($partsArray['fragment']) ? '#' . $partsArray['fragment'] : '');
-                    HttpUtility::redirect($redirectUrl);
+
+                    $response = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Psr\Http\Message\ResponseFactoryInterface::class)->createResponse(\TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_303)->withAddedHeader('location', $redirectUrl);
+                    throw new \TYPO3\CMS\Core\Http\PropagateResponseException($response);
                 }
             }
         }

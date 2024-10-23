@@ -58,7 +58,8 @@ class ToolbarItemHook implements ToolbarItemInterface
         $toolbarMenu = array();
 
         $title = $GLOBALS['LANG']->getLL('fe_users.tx_cabagloginas_loginas', true);
-        $ext_conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
+        $ext_conf = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['cabag_loginas'];
+//        $ext_conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
         $defLinkText = trim($ext_conf['defLinkText']);
         if (empty($defLinkText) || strpos($defLinkText, '#') === false || strpos($defLinkText, 'password') !== false) {
             $defLinkText = '[#pid# / #uid#] #username# (#email#)';
@@ -121,7 +122,7 @@ class ToolbarItemHook implements ToolbarItemInterface
         $parameterArray['userid'] = (string)$user['uid'];
         $parameterArray['timeout'] = (string)$timeout = time() + 3600;
         // Check user settings for any redirect page
-        if ($user['felogin_redirectPid']) {
+        if ($user['felogin_redirectPid']??false) {
             $parameterArray['redirecturl'] = $this->getRedirectUrl($user['felogin_redirectPid']);
         } else {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -187,7 +188,8 @@ class ToolbarItemHook implements ToolbarItemInterface
      */
     public function getRedirectForCurrentDomain($pid)
     {
-        $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
+        $extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['cabag_loginas'];
+//        $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
 
         $domain = $this->getRealDomain($pid);
 

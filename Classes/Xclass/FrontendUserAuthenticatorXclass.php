@@ -32,7 +32,7 @@ class FrontendUserAuthenticatorXclass extends FrontendUserAuthenticator
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $FE_alwaysFetchUser = $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['FE_alwaysFetchUser'];
+        $FE_alwaysFetchUser = $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['FE_alwaysFetchUser']??null;
         $cabag_loginas_data = GeneralUtility::_GP('tx_cabagloginas');
         if (isset($cabag_loginas_data['userid']) && ($cabag_loginas_data['userid'] > 0)) {
             // Trigger authentication without setting FE_alwaysFetchUser globally

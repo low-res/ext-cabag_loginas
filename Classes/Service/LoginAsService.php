@@ -39,18 +39,18 @@ class LoginAsService extends AbstractAuthenticationService
             unset($cabagLoginasData['verification']);
             if (md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $hashedSesId . serialize($cabagLoginasData)) === $verificationHash &&
                 $cabagLoginasData['timeout'] > time()) {
-                    $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('fe_users');
-                    $queryBuilder->getRestrictions()
-                        ->removeAll()
-                        ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
-                        ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
-                    $user = $queryBuilder
-                        ->select('*')
-                        ->from('fe_users')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($cabagLoginasData['userid'], \PDO::PARAM_INT)))->executeQuery()->fetchAllAssociative();
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('fe_users');
+                $queryBuilder->getRestrictions()
+                    ->removeAll()
+                    ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
+                    ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+                $user = $queryBuilder
+                    ->select('*')
+                    ->from('fe_users')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($cabagLoginasData['userid'], \PDO::PARAM_INT)))->executeQuery()->fetchAllAssociative();
                 if ($user[0]) {
                     $row = $user[0];
                     $this->rowdata = $user[0];
-                    if (is_object($GLOBALS['TSFE']->fe_user)) {
+                    if ($GLOBALS['TSFE']??false && is_object($GLOBALS['TSFE']->fe_user)) {
                         $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_cabagloginas', true);
                     }
                 }

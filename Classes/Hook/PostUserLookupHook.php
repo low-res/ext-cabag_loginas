@@ -39,30 +39,30 @@ class PostUserLookupHook {
      */
     public function postUserLookUp(array $params, object &$pObj): void {
 
-        if (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend()) {
-            if (!empty($GLOBALS['TSFE']->fe_user->user['uid'])) {
-                $cabagLoginasData = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['Cabag\CabagLoginas\Hook\ToolbarItemHook'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['Cabag\CabagLoginas\Hook\ToolbarItemHook'] ?? null;
-                if (!empty($cabagLoginasData['redirecturl'])) {
-                    $partsArray = parse_url(rawurldecode($cabagLoginasData['redirecturl']));
-                    if (strpos(GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $partsArray['scheme'] . '://' . $partsArray['host'] . '/') === FALSE) {
-                        $partsArray['query'] .= '&FE_SESSION_KEY=' . rawurlencode(
-                                $pObj->id . '-' . md5($pObj->id . '/' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])
+        //if (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend()) {
+        if (!empty($GLOBALS['TSFE']->fe_user->user['uid'])) {
+            $cabagLoginasData = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['Cabag\CabagLoginas\Hook\ToolbarItemHook'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['Cabag\CabagLoginas\Hook\ToolbarItemHook'] ?? null;
+            if (!empty($cabagLoginasData['redirecturl'])) {
+                $partsArray = parse_url(rawurldecode($cabagLoginasData['redirecturl']));
+                if (strpos(GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $partsArray['scheme'] . '://' . $partsArray['host'] . '/') === FALSE) {
+                    $partsArray['query'] .= '&FE_SESSION_KEY=' . rawurlencode(
+                            $pObj->id . '-' . md5($pObj->id . '/' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])
                         );
-                    }
-                    $redirectUrl = (isset($partsArray['scheme']) ? $partsArray['scheme'] . '://' : '') .                                           
-                        (isset($partsArray['user']) ? $partsArray['user'] .
-                        (isset($partsArray['pass']) ? ':' . $partsArray['pass'] : '') . '@' : '') .
-                        (isset($partsArray['host']) ? $partsArray['host'] : '') .
-                        (isset($partsArray['port']) ? ':' . $partsArray['port'] : '') .
-                        (isset($partsArray['path']) ? $partsArray['path'] : '') .
-                        (isset($partsArray['query']) ? '?' . $partsArray['query'] : '') .
-                        (isset($partsArray['fragment']) ? '#' . $partsArray['fragment'] : '');
-
-                    $response = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Psr\Http\Message\ResponseFactoryInterface::class)->createResponse(\TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_303)->withAddedHeader('location', $redirectUrl);
-                    throw new \TYPO3\CMS\Core\Http\PropagateResponseException($response);
                 }
+                $redirectUrl = (isset($partsArray['scheme']) ? $partsArray['scheme'] . '://' : '') .
+                    (isset($partsArray['user']) ? $partsArray['user'] .
+                        (isset($partsArray['pass']) ? ':' . $partsArray['pass'] : '') . '@' : '') .
+                    (isset($partsArray['host']) ? $partsArray['host'] : '') .
+                    (isset($partsArray['port']) ? ':' . $partsArray['port'] : '') .
+                    (isset($partsArray['path']) ? $partsArray['path'] : '') .
+                    (isset($partsArray['query']) ? '?' . $partsArray['query'] : '') .
+                    (isset($partsArray['fragment']) ? '#' . $partsArray['fragment'] : '');
+
+                $response = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Psr\Http\Message\ResponseFactoryInterface::class)->createResponse(\TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_303)->withAddedHeader('location', $redirectUrl);
+                throw new \TYPO3\CMS\Core\Http\PropagateResponseException($response);
             }
         }
+        //}
     }
 
 }

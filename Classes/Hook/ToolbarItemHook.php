@@ -24,6 +24,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Session\Backend\DatabaseSessionBackend;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -167,13 +168,9 @@ class ToolbarItemHook implements ToolbarItemInterface
         if (trim($title) === '') {
             $title = $GLOBALS['LANG']->getLL('cabag_loginas.switchToFeuser', true);
         }
-        if (version_compare(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion(), '7.6.0', '>=')) {
-            $iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
-            $switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render();
-            $additionalClass = '  class="btn btn-default"';
-        } else {
-            $switchUserIcon = IconUtility::getSpriteIcon('actions-system-backend-user-emulate', array('style' => 'background-position: 0 10px;'));
-        }
+        $iconFactory = GeneralUtility::makeInstance( IconFactory::class );
+        $switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render();
+        $additionalClass = '  class="btn btn-default"';
         $link = $this->getHREF($user);
         $content = '<a title="' . $title . '" href="' . $link . '" target="_blank"' . $additionalClass . '>' . $switchUserIcon . '</a>';
         return $content;

@@ -5,8 +5,16 @@ services:
     autoconfigure: true
     public: false
 
-Cabag\CabagLoginas\Listeners\RecordList\AddLoginAsUserTableActionListener:
+  Cabag\CabagLoginas\:
+    resource: '../Classes/*'
+
+  Cabag\CabagLoginas\Listeners\RecordList\AddLoginAsUserTableActionListener:
     tags:
       - name: event.listener
-        identifier: 'Cabag/CabagLoginas/Listeners/RecordList/AddLoginAsUserTableActionListener'
-        method: 'modifyRecordActions'
+        identifier: 'CabagAddLoginAsUserRecordsListTableActionsListener'
+        method: 'modifyRecordsListTableActions'
+        event: 'TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListTableActionsEvent'
+      - name: event.listener
+        identifier: 'CabagAddLoginAsUserRecordListRecordActionsListener'
+        method: 'modifyRecordListRecordActions'
+        event: 'TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent'

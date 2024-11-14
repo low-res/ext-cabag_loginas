@@ -2,12 +2,9 @@
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-if (!defined('TYPO3_MODE')) {
+if (!defined('TYPO3')) {
 	die ('Access denied.');
 }
-
-// Hook for adding switch icon to website users
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/class.db_list_extra.inc']['actions'][] = 'Cabag\CabagLoginas\Hook\RecordListHook';
 
 // Hook to check for redirection
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_userauth.php']['postUserLookUp'][] = 'Cabag\CabagLoginas\Hook\PostUserLookupHook->postUserLookUp';
@@ -18,7 +15,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][TYPO3\CMS\Frontend\Middleware\Fron
 ];
 
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService('cabag_loginas', 'auth', 'Cabag\\CabagLoginas\\Service\\LoginAsService' /* sv key */,
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
+    'cabag_loginas',
+    'auth',
+    'tx_cabagloginas_auth', //'Cabag\\CabagLoginas\\Service\\LoginAsService' /* sv key */,
 	array(
 
 		'title' => 'Login as Service',

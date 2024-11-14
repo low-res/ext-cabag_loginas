@@ -1,6 +1,12 @@
 cabag_loginas
 =============
 
+# Compatible with TYPO3 12.4
+
+This fork contains necessary changes to be compatible with TYPO3 12.4
+
+---
+
 Friendly fork of current TER version with support for TYPO3 CMS 9.5+ and with improved styling.
 
 * Within the backend you have a button in the fe_user table to quickly login as this fe user in frontend.

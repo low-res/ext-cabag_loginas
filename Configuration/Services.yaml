@@ -11,10 +11,10 @@ services:
   Cabag\CabagLoginas\Listeners\RecordList\AddLoginAsUserTableActionListener:
     tags:
       - name: event.listener
-        identifier: 'CabagAddLoginAsUserRecordsListTableActionsListener'
-        method: 'modifyRecordsListTableActions'
-        event: 'TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListTableActionsEvent'
-      - name: event.listener
         identifier: 'CabagAddLoginAsUserRecordListRecordActionsListener'
         method: 'modifyRecordListRecordActions'
         event: 'TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent'
+      - name: event.listener
+        identifier: 'CabagAddLoginAsUserRecordListRecordActionsListener'
+        method: 'modifyRecordsListTableActions'
+        event: 'TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListTableActionsEvent'

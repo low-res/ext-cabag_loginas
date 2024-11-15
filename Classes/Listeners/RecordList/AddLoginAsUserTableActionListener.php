@@ -2,7 +2,6 @@
 
 namespace Cabag\CabagLoginas\Listeners\RecordList;
 
-//use Cabag\CabagLoginas\Hook\ToolbarItemHook;
 use Cabag\CabagLoginas\Hook\ToolbarItemHook;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
@@ -32,6 +31,7 @@ final class AddLoginAsUserTableActionListener
     public function modifyRecordListRecordActions(ModifyRecordListRecordActionsEvent $event): void
     {
         if( $event->getTable() === 'fe_users') {
+            /** @var ToolbarItemHook $loginAsObj */
             $loginAsObj = GeneralUtility::makeInstance( ToolbarItemHook::class );
             $markup = $loginAsObj->getLoginAsIconInTable( $event->getRecord() );
 //            $markup = "markup";

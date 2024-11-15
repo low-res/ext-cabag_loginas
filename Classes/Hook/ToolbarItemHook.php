@@ -106,6 +106,20 @@ class ToolbarItemHook
         return $content;
     }
 
+    public function getLoginAsLinkInActions($user, $title = '')
+    {
+        $additionalClass = '';
+        if (trim($title) === '') {
+            $title = $GLOBALS['LANG']->getLL('cabag_loginas.switchToFeuser', true);
+        }
+        $iconFactory = GeneralUtility::makeInstance( IconFactory::class );
+        $switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render();
+        $additionalClass = '  class="dropdown-item"';
+        $link = $this->getHREF($user);
+        $content = '<a title="' . $title . '" href="' . $link . '" target="_blank"' . $additionalClass . '>' . $switchUserIcon . $title . '</a>';
+        return $content;
+    }
+
 
 
     /**

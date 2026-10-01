@@ -40,7 +40,8 @@ class ToolbarItemHook implements ToolbarItemInterface
 
     public function __construct(BackendController &$backendReference = null)
     {
-        $GLOBALS['LANG']->includeLLFile('EXT:cabag_loginas/Resources/Private/Language/locallang_db.xlf');
+        // TYPO3 13: LanguageService::includeLLFile() was removed; labels are
+        // resolved via sL() with the full LLL path where they are used.
         $this->backendReference = $backendReference;
     }
 

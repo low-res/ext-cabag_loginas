@@ -192,6 +192,24 @@ class ToolbarItemHook implements ToolbarItemInterface
     }
 
     /**
+     * Renders the "Login as" link as a dropdown-item, for use in an action
+     * dropdown (e.g. a custom backend module's record action menu) rather
+     * than inline in a record list row. See getLoginAsIconInTable() for the
+     * inline-icon variant.
+     */
+    public function getLoginAsLinkInActions($user, $title = '')
+    {
+        if (trim($title) === '') {
+            $title = $GLOBALS['LANG']->sL('LLL:EXT:cabag_loginas/Resources/Private/Language/locallang_db.xlf:cabag_loginas.switchToFeuser');
+        }
+        $iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
+        $switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render();
+        $link = $this->getHREF($user);
+        $content = '<a title="' . $title . '" href="' . $link . '" target="_blank" class="dropdown-item">' . $switchUserIcon . $title . '</a>';
+        return $content;
+    }
+
+    /**
      * Finds the redirect link for the current domain.
      *
      * @param integer $pid Page id the user is stored in

@@ -76,7 +76,7 @@ class LoginAsService extends AbstractAuthenticationService
         if (!$this->rowdata) {
             $this->getUser();
         }
-        if ($this->rowdata['uid'] == $user['uid']) {
+        if (is_array($this->rowdata) && (int)$this->rowdata['uid'] === (int)$user['uid']) {
             $OK = 200;
         }
 

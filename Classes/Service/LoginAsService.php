@@ -2,6 +2,7 @@
 
 namespace Cabag\CabagLoginas\Service;
 
+use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Session\Backend\DatabaseSessionBackend;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -30,7 +31,7 @@ class LoginAsService extends AbstractAuthenticationService
     {
         $row = false;
 
-            $request = &$GLOBALS['TYPO3_REQUEST'] ?? ServerRequestFactory::fromGlobals();
+            $request = $this->authInfo['request'] ?? $GLOBALS['TYPO3_REQUEST'] ?? ServerRequestFactory::fromGlobals();
             $cabagLoginasData = $request->getParsedBody()['tx_cabagloginas'] ?? $request->getQueryParams()['tx_cabagloginas'] ?? null;
 
         if (isset($cabagLoginasData['verification'])) {

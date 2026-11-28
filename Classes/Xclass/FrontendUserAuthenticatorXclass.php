@@ -16,7 +16,6 @@
 namespace Cabag\CabagLoginas\Xclass;
 
 use TYPO3\CMS\Frontend\Middleware\FrontendUserAuthenticator;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -34,8 +33,8 @@ class FrontendUserAuthenticatorXclass extends FrontendUserAuthenticator
     {
         // update 12
         $FE_alwaysFetchUser = @$GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['FE_alwaysFetchUser'];
-        $requestcabagloginas = &$GLOBALS['TYPO3_REQUEST'] ?? ServerRequestFactory::fromGlobals();
-        $cabag_loginas_data = $requestcabagloginas->getParsedBody()['tx_cabagloginas'] ?? $requestcabagloginas->getQueryParams()['tx_cabagloginas'] ?? null;
+        // Den Request der Middleware nutzen: $GLOBALS['TYPO3_REQUEST'] ist hier unter TYPO3 13 noch nicht gesetzt.
+        $cabag_loginas_data = $request->getParsedBody()['tx_cabagloginas'] ?? $request->getQueryParams()['tx_cabagloginas'] ?? null;
         if (isset($cabag_loginas_data['userid']) && ($cabag_loginas_data['userid'] > 0)) {
             // Trigger authentication without setting FE_alwaysFetchUser globally
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['FE_alwaysFetchUser'] = true;
